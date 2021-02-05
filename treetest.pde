@@ -7,44 +7,41 @@ PVector camPos;
 float camPitch, camYaw;
 
 void setup() {
-  size(800, 800, P3D);
+  size(1600, 864, P3D);
   smooth(8);
+  frameRate(60);
   
   rand = new Random(0);
   blocks = new ArrayList<Block>();
   
   // camera init
-  camPos = new PVector(10.764066,   -2.600000,   10.244535);
-  camYaw = 3.9;
-  camPitch =  -0.02;
+  camPos = new PVector( -6.775806,   -0.600000,    9.964614);
+  camYaw = 2.579375   ; 
+  camPitch = 0.146722;
   
-  
-  for (int x = -10; x < 10; x++) {
-    for (int z = -10; z < 10; z++) {
-      if (cheb2D(0, 0, x, z) == 8) {
-        blocks.add(new Block(x, 0, z));
-      }
-    }
-  }
+  genTrees();
 }
 
 void draw() {
   background(0);
   lights();
   directionalLight(127, 127, 127, .75, 1, .5);
-  noStroke();
-  fill(255);
   
-  //handleInput();
-  //System.out.printf("%12.6f %12.6f %12.6f %12.6f %12.6f\n", camPos.x, camPos.y, camPos.z, Math.toDegrees(camYaw), Math.toDegrees(camPitch));
+  //blocks.clear();
+  //genTrees();
+  //treeSeed += 1;
+  
+  handleInput();
+  //System.out.printf("%12.6f %12.6f %12.6f %12.6f %12.6f\n", camPos.x, camPos.y, camPos.z, camYaw, camPitch);
   
   // camera transform
   PVector target = new PVector(0, 0, 1);
   target = rotateX(target, camPitch);
   target = rotateY(target, camYaw);
   target.add(camPos);
-  perspective((float) Math.toRadians(70), (float) width/height, .1, 10000);
-  camera(camPos.x, camPos.y, camPos.z, target.x, target.y, target.z, 0, 1, 0); 
+  perspective((float) Math.toRadians(40), (float) width/height, .1, 10000);
+  camera(camPos.x, camPos.y, camPos.z, target.x, target.y, target.z, 0, 1, 0);
+  rotateZ(PI);
   
   //translate(random(100) - 50, random(100) - 50, random(100) - 50);
   //translate(0, 0, 10);
@@ -59,18 +56,19 @@ class Block {
   PVector pos;
   
   public Block() {
-    this(0, 0, 0);
+    this(0, 0, 0, 255, 255, 255);
   }
   
-  public Block(float x, float y, float z) {
-    c = new int[] { 255, 255, 255 };
+  public Block(float x, float y, float z, int r, int g, int b) {
     pos = new PVector(x, y, z);
+    c = new int[] { r, g, b };
   }
   
   void draw() {
     pushMatrix();
     translate(pos.x, pos.y, pos.z);
-    color(c[0], c[1], c[2]);
+    noStroke();
+    fill(c[0], c[1], c[2]);
     box(1);
     popMatrix();
   }

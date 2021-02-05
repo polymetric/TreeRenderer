@@ -1,6 +1,14 @@
+void keyPressed() {
+  if (key == 'r') {
+    setup();
+  }
+}
+
 void handleInput() {
-  camPitch = map(mouseY, 0, height, 4, -4);
-  camYaw = map(mouseX,   0, width,  4, -4);
+  if (mousePressed) {
+    camPitch += map(mouseY-pmouseY, -height, height, 1, -1) * 1;
+    camYaw   += map(mouseX-pmouseX, -width,  width,  1, -1) * 1;
+  }
   
   if (keyPressed) {
     float speed = 0.1;
