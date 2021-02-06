@@ -13,10 +13,14 @@ class RandomOverride implements java.io.Serializable {
     static final String BadBound = "bound must be positive";
     static final String BadRange = "bound must be greater than origin";
     static final String BadSize  = "size must be non-negative";
+    
+    long dfz = 0;
 
     public RandomOverride() {
         this(System.nanoTime());
+        dfz = 0;
     }
+    
     public RandomOverride(long seed) {
         if (getClass() == RandomOverride.class)
             this.seed = new AtomicLong(initialScramble(seed));
@@ -25,6 +29,7 @@ class RandomOverride implements java.io.Serializable {
             this.seed = new AtomicLong();
             setSeed(seed);
         }
+        dfz = 0;
     }
 
     private long initialScramble(long seed) {
@@ -34,6 +39,11 @@ class RandomOverride implements java.io.Serializable {
     synchronized public void setSeed(long seed) {
         this.seed.set(initialScramble(seed));
         haveNextNextGaussian = false;
+        dfz = 0;
+    }
+    
+    synchronized public void setSeedDirect(long seed) {
+        this.seed.set(seed);
     }
 
     protected int next(int bits) {
@@ -42,7 +52,9 @@ class RandomOverride implements java.io.Serializable {
         do {
             oldseed = seed.get();
             nextseed = (oldseed * multiplier + addend) & mask;
+            dfz += 1;
         } while (!seed.compareAndSet(oldseed, nextseed));
+        //System.out.printf("next called, dfz=%d\n", dfz);
         return (int)(nextseed >>> (48 - bits));
     }
 
@@ -122,6 +134,7 @@ class RandomOverride implements java.io.Serializable {
                  u = next(31))
                 ;
         }
+        //System.out.printf("nextInt called, dfz=%d\n", dfz);
         return r;
     }
 

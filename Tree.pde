@@ -1,7 +1,9 @@
 long treeSeed = 0;
 
 void genTrees() {
-  RandomOverride rand = new RandomOverride(treeSeed);
+  RandomOverride rand = new RandomOverride();
+  rand.setSeed(treeSeed);
+  //rand.setSeedDirect(treeSeed);
   
   //for (int i = 0; i < 6; i++) {
   //  int baseX = rand.nextInt(16);
@@ -11,6 +13,7 @@ void genTrees() {
   //  genTree(rand, baseX, baseY, baseZ);
   //}
   genTree(rand, 0, 0, 0);
+  System.out.printf("dfz=%d", rand.dfz);
 }
 
 void genTree(RandomOverride rand, int baseX, int baseY, int baseZ) {
@@ -22,9 +25,12 @@ void genTree(RandomOverride rand, int baseX, int baseY, int baseZ) {
     for (int x = baseX - radius; x <= baseX + radius; x++) {
       int relX = x - baseX;
       for (int z = baseZ - radius; z <= baseZ + radius; z++) {
-      int relZ = z - baseZ;
+        int relZ = z - baseZ;
         if (abs(relX) != radius || abs(relZ) != radius || rand.nextInt(2) != 0 && distFromTop != 0) {
           blocks.add(new Block(x, y, z, 0, 127, 0));
+        }
+        if (abs(relX) == radius && abs(relZ) == radius) {
+          System.out.printf("rand called from %12d %12d\n", x, z);
         }
       }
     }
