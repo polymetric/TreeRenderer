@@ -1,5 +1,6 @@
 import java.util.*;
 
+int time;
 Random rand;
 ArrayList<Block> blocks;
 
@@ -11,25 +12,28 @@ void setup() {
   smooth(8);
   frameRate(60);
   
+  time = 0;
   rand = new Random(0);
   blocks = new ArrayList<Block>();
   
   // camera init
-  camPos = new PVector( -6.775806,   -0.600000,    9.964614);
-  camYaw = 2.579375   ; 
-  camPitch = 0.146722;
-  
-  genTrees();
+  camPos = new PVector(-12.211766,   -0.600000,   17.997593);
+  camYaw = 2.534997; 
+  camPitch = 0.262463;
 }
 
 void draw() {
   background(0);
+  
   lights();
   directionalLight(127, 127, 127, .75, 1, .5);
   
-  //blocks.clear();
-  //genTrees();
-  //treeSeed += 1;
+  blocks.clear();
+  genTrees();
+  if (time % 5 == 0) {
+    treeSeed += 1;
+    //radiusLimit++;
+  }
   
   handleInput();
   //System.out.printf("%12.6f %12.6f %12.6f %12.6f %12.6f\n", camPos.x, camPos.y, camPos.z, camYaw, camPitch);
@@ -49,28 +53,44 @@ void draw() {
   for (Block block : blocks) {
     block.draw();
   }
+  
+  time++;
 }
 
 class Block {
-  int[] c;
+  Color clr;
   PVector pos;
   
   public Block() {
-    this(0, 0, 0, 255, 255, 255);
+    this(0, 0, 0);
   }
   
-  public Block(float x, float y, float z, int r, int g, int b) {
+  public Block(float x, float y, float z) {
+    this(x, y, z, new Color(255, 255, 255));
+  }
+  
+  public Block(float x, float y, float z, Color clr) {
     pos = new PVector(x, y, z);
-    c = new int[] { r, g, b };
+    this.clr = clr;
   }
   
   void draw() {
     pushMatrix();
     translate(pos.x, pos.y, pos.z);
+    scale(.95);
     noStroke();
-    fill(c[0], c[1], c[2]);
+    fill(clr.r, clr.g, clr.b);
     box(1);
     popMatrix();
+  }
+}
+
+class Color {
+  int r, g, b;
+  public Color(int r, int g, int b) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
   }
 }
 
