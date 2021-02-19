@@ -20,7 +20,22 @@ void setup() {
   camPos = new PVector(-12.211766,   -0.600000,   17.997593);
   camYaw = 2.534997; 
   camPitch = 0.262463;
+
+  trunkHeight = 9; // 6..9
+  baseHeight = 2; // 1..2
+  leafHeight = trunkHeight - baseHeight; // 4..7
+  maxRadiusLimit = 3; // 2..3
+  topLeaves = 0; // 0..2
+  initialRadius = 1; // 0..1
 }
+
+int trunkHeight;
+int baseHeight;
+int leafHeight;
+int maxRadiusLimit;
+int topLeaves;
+int initialRadius;
+
 
 void draw() {
   background(0);
@@ -28,11 +43,14 @@ void draw() {
   lights();
   directionalLight(127, 127, 127, .75, 1, .5);
   
-  blocks.clear();
-  genTrees();
   if (time % 5 == 0) {
-    treeSeed += 1;
-    //radiusLimit++;
+    blocks.clear();
+    genTrees();
+  
+    //treeSeed += 1;
+    treeSeed = rand.nextLong();
+    
+    leafHeight = trunkHeight - baseHeight; // 4..7
   }
   
   handleInput();
